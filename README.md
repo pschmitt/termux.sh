@@ -5,7 +5,7 @@ Here lie a few scripts that are useful for termux users.
 ## zplugin
 
 ```bash
-zplugin ice wait lucid pick"/dev/null" if"command -v termux-info >/dev/null" \
+zplugin ice wait lucid pick"/dev/null" has"termux-info" \
   atclone'ln -sf $(realpath termux-fullscreen.sh) ~/bin/termux-fullscreen;
           ln -sf $(realpath termux_notify-send.sh) ~/bin/notify-send;
           ln -sf $(realpath termux_xsel.sh) ~/bin/xsel;
