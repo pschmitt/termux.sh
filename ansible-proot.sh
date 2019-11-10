@@ -23,6 +23,7 @@ fi
 exec proot --link2symlink -0 -r ${PREFIX}/share/TermuxAlpine/ \
   -b /dev/ -b "$TMPDIR/dev-shm:/dev/shm" -b /sys/ -b /proc/ \
   -b "$TMPDIR/.ansible:/home/.ansible" \
+  -b "$HOME" \
   -b "$HOME/.ssh/id_ed25519_ansible:/home/.ssh/id_ed25519_ansible" \
   -b "$PWD:/ansible" \
   -w /ansible \
