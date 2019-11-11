@@ -20,14 +20,23 @@ then
 fi
 
 # Run
-exec proot --link2symlink -0 -r ${PREFIX}/share/TermuxAlpine/ \
-  -b /dev/ -b "$TMPDIR/dev-shm:/dev/shm" -b /sys/ -b /proc/ \
+exec proot --link2symlink -0 \
+  -r "${PREFIX}/share/TermuxAlpine/" \
+  -b /dev/ \
+  -b /proc/ \
+  -b /sys/ \
+  -b "$TMPDIR/dev-shm:/dev/shm" \
   -b "$TMPDIR/.ansible:/home/.ansible" \
   -b "$HOME" \
   -b "$HOME/.ssh/id_ed25519_ansible:/home/.ssh/id_ed25519_ansible" \
   -b "$PWD:/ansible" \
   -w /ansible \
-  /usr/bin/env HOME=/home PREFIX=/usr SHELL=/bin/sh TERM="$TERM" LANG="$LANG" \
+  /usr/bin/env \
+    HOME=/home \
+    PREFIX=/usr \
+    SHELL=/bin/sh \
+    TERM="$TERM" \
+    LANG="$LANG" \
     XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}" \
     PATH=/bin:/usr/bin:/sbin:/usr/sbin \
   /bin/sh -c "$@"
