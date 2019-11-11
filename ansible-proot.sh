@@ -27,5 +27,7 @@ exec proot --link2symlink -0 -r ${PREFIX}/share/TermuxAlpine/ \
   -b "$HOME/.ssh/id_ed25519_ansible:/home/.ssh/id_ed25519_ansible" \
   -b "$PWD:/ansible" \
   -w /ansible \
-  /usr/bin/env HOME=/home PREFIX=/usr SHELL=/bin/sh TERM="$TERM" LANG=$LANG PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+  /usr/bin/env HOME=/home PREFIX=/usr SHELL=/bin/sh TERM="$TERM" LANG="$LANG" \
+    XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}" \
+    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
   /bin/sh -c "$@"
