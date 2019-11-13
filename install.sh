@@ -2,11 +2,15 @@
 
 cd "$(readlink -f "$(dirname "$0")")" || exit 9
 
+DEST="${DEST:-${HOME}/bin}"
+
+mkdir -p "$DEST"
+
 # "Fake" commands
 for file in termux_notify-send.sh termux_xsel.sh
 do
   ln -sf $(realpath $file) \
-    ~/bin/$(sed -nr 's/^termux_(.+).sh$/\1/p' <<< "$file")
+    "${DEST}/$(sed -nr 's/^termux_(.+).sh$/\1/p' <<< "$file")"
 done
 
 # Ansible
@@ -31,5 +35,5 @@ ANSIBLE_COMMANDS=(
 for cmd in ${ANSIBLE_COMMANDS[@]}
 do
   ln -sf "$(realpath ansible-wrapper.sh)" \
-    "${HOME}/bin/${cmd}"
+    "${DEST}/${cmd}"
 done

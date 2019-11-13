@@ -27,3 +27,9 @@ If you don't want or need the symlinks just run the `ansible-install.sh` script.
 To install the latest ansible version you can use the following: 
 `ansible-install --pip`.
 The same flag applies for the install script: `ìnstall.sh --full --pip`.
+
+## Customize the symlink location
+
+By default all the symlinks will be created in the `$HOME/bin` directory.
+To set the destination path you need to set `$DEST` like so:
+`DEST=$PREFIX/bin ./install.sh --full --pip`
