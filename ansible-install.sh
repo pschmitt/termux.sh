@@ -1,7 +1,19 @@
 #!/usr/bin/env bash
 
+get_tmpdir() {
+  echo "${TMPDIR:-/tmp}"
+}
+
+uninstall_alpine() {
+  local tmpdir="$(get_tmpdir)"
+  cd "$tmpdir"
+  curl -LO \
+    https://raw.githubusercontent.com/Hax4us/TermuxAlpine/master/TermuxAlpine.sh
+  yes | bash TermuxAlpine.sh --uninstall || true
+}
+
 install_alpine() {
-  local tmpdir="${TMPDIR:-/tmp}"
+  local tmpdir="$(get_tmpdir)"
   cd "$tmpdir"
   curl -LO \
     https://raw.githubusercontent.com/Hax4us/TermuxAlpine/master/TermuxAlpine.sh
@@ -16,17 +28,49 @@ install_alpine() {
 _alpine_exec() {
   # Exec commands inside alpine proot
   LD_PRELOAD=
+  # proot --link2symlink -0 \
+  #   -r ${PREFIX}/share/TermuxAlpine/ \
+  #   -b /dev/ -b /sys/ -b /proc/ -b /sdcard -b /storage -b $HOME \
+  #   -w /home /usr/bin/env HOME=/root PREFIX=/usr SHELL=/bin/sh TERM="$TERM" \
+  #     LANG=$LANG PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+  #   /bin/sh -c "$@"
   proot --link2symlink -0 \
     -r ${PREFIX}/share/TermuxAlpine/ \
-    -b /dev/ -b /sys/ -b /proc/ -b /sdcard -b /storage -b $HOME \
-    -w /home /usr/bin/env HOME=/root PREFIX=/usr SHELL=/bin/sh TERM="$TERM" \
-      LANG=$LANG PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+    -b /dev/ -b /sys/ -b /proc/ \
+    -w / \
+    /usr/bin/env \
+      HOME=/root \
+      PREFIX=/usr \
+      SHELL=/bin/sh \
+      TERM="$TERM" \
+      LANG="$LANG" \
+      PATH=/bin:/usr/bin:/sbin:/usr/sbin \
     /bin/sh -c "$@"
 }
 
 install_ansible() {
-  # Install requirements
+  case "$1" in
+    pip|--pip|--latest|latest)
+      install_ansible_pip
+      ;;
+    *)
+      install_ansible_pkg
+      ;;
+  esac
+}
+
+install_ansible_pkg() {
   _alpine_exec "apk add --no-cache ansible openssh"
+}
+
+install_ansible_pip() {
+  # Install requirements
+  _alpine_exec \
+    "apk add --no-cache python3 openssh \
+      py3-cffi py3-cryptography py3-markupsafe py3-jinja2 py3-yaml && \
+    apk add --no-cache -t build-deps build-base python3-dev && \
+    pip3 install -U ansible && \
+    apk del build-deps"
 }
 
 setup_host() {
@@ -54,11 +98,24 @@ start_sshd() {
   sshd
 }
 
+cleanup() {
+  rm -rf "$(get_tmpdir)/TermuxAlpine.sh"
+}
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
-  set -euxo
-  setup_host
-  install_alpine
-  install_ansible
+  set -exo
+  case "$1" in
+    uninstall|--uninstall|--rm|--delete|--del)
+      uninstall_alpine
+      ;;
+    *)
+      uninstall_alpine
+      setup_host
+      uninstall_alpine
+      install_alpine
+      install_ansible "$1"
+      ;;
+  esac
+  cleanup
 fi

@@ -21,3 +21,9 @@ ansible on board. Somehow this gets around the sem_open issue on Android 🤷
 
 Run `install.sh --full` on your termux host.
 If you don't want or need the symlinks just run the `ansible-install.sh` script.
+
+## Install ansible from pip
+
+To install the latest ansible version you can use the following: 
+`ansible-install --pip`.
+The same flag applies for the install script: `ìnstall.sh --full --pip`.
