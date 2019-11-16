@@ -20,6 +20,7 @@ then
 fi
 
 ANSIBLE_COMMANDS=(
+  ansible
   ansible-config
   ansible-console
   ansible-galaxy
