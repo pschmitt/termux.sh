@@ -37,3 +37,7 @@ do
   ln -sf "$(realpath ansible-wrapper.sh)" \
     "${DEST}/${cmd}"
 done
+
+# Symlink ansible-install.sh
+ln -sf "$(realpath ansible-install.sh)" \
+  "${DEST}/ansible-install.sh"
