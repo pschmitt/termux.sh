@@ -9,7 +9,7 @@ mkdir -p "$DEST"
 # "Fake" commands
 for file in termux_notify-send.sh termux_xsel.sh
 do
-  ln -sf $(realpath $file) \
+  ln -sf "$(realpath "$file")" \
     "${DEST}/$(sed -nr 's/^termux_(.+).sh$/\1/p' <<< "$file")"
 done
 
@@ -32,7 +32,7 @@ ANSIBLE_COMMANDS=(
   ansible-vault
 )
 
-for cmd in ${ANSIBLE_COMMANDS[@]}
+for cmd in "${ANSIBLE_COMMANDS[@]}"
 do
   ln -sf "$(realpath ansible-wrapper.sh)" \
     "${DEST}/${cmd}"
