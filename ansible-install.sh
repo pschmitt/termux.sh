@@ -94,7 +94,7 @@ install_ansible_pip() {
 }
 
 _get_ansible_version() {
-  _alpine_exec ansible --version | sed -rn 's/^ansible\s+([0-9.]+).*/\1/p' | head -1
+  _alpine_exec "ansible --version" | sed -rn 's/^ansible\s+([0-9.]+).*/\1/p' | head -1
 }
 
 _get_latest_ansible_version() {
