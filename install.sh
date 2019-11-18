@@ -16,7 +16,7 @@ done
 # Ansible
 if [[ "$1" == "--full" ]]
 then
-  ./ansible-install.sh "$2"
+  ./ansible-install.sh "$2" "$3"
 fi
 
 ANSIBLE_COMMANDS=(
