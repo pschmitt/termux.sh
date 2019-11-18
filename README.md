@@ -46,7 +46,12 @@ To install another one use:
 ansible-install.sh --pip VERSION
 ```
 
-As in: `ansible-install.sh --pip 2.9.1`.
+As in: 
+
+```bash
+ansible-install.sh --pip 2.9.1
+```
+
 This also applies to the global installer:
 
 ```bash
