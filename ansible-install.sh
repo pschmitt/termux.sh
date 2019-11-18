@@ -64,14 +64,14 @@ install_ansible() {
 }
 
 install_ansible_pkg() {
-  _alpine_exec "apk add --no-cache ansible openssh"
+  _alpine_exec "apk add --no-cache ansible openssh bash"
 }
 
 install_ansible_pip() {
   local ansible_version="${1:-$(_get_latest_ansible_version)}"
   # Install requirements
   _alpine_exec \
-    "apk add --no-cache python3 openssh \
+    "apk add --no-cache python3 openssh bash \
       py3-cffi py3-cryptography py3-markupsafe py3-jinja2 py3-yaml && \
     apk add --no-cache -t build-deps build-base python3-dev && \
     pip3 install -U ansible=="${ansible_version}" && \
