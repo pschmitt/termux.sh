@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 usage() {
-  echo "Usage: $(basename $0) --uninstall|--pip [VERSION]"
+  echo "Usage: $(basename $0) [--uninstall|--pip VERSION] [PKGS]"
 }
 
 get_tmpdir() {
@@ -55,20 +55,30 @@ _alpine_exec() {
 install_ansible() {
   case "$1" in
     pip|--pip|--latest|latest)
-      install_ansible_pip "$2"
+      shift
+      install_ansible_pip "$@"
       ;;
     *)
-      install_ansible_pkg
+      install_ansible_pkg "$@"
       ;;
   esac
 }
 
 install_ansible_pkg() {
   _alpine_exec "apk add --no-cache ansible openssh bash"
+  # Install extra packages
+  if [[ -n "$1" ]]
+  then
+    _alpine_exec "apk add --no-cache $1"
+  fi
 }
 
 install_ansible_pip() {
-  local ansible_version="${1:-$(_get_latest_ansible_version)}"
+  local ansible_version="$1"
+  if [[ "$ansible_version" == "latest" ]]
+  then
+    ansible_version="$(_get_latest_ansible_version)"
+  fi
   # Install requirements
   _alpine_exec \
     "apk add --no-cache python3 openssh bash \
@@ -76,6 +86,11 @@ install_ansible_pip() {
     apk add --no-cache -t build-deps build-base python3-dev && \
     pip3 install -U ansible=="${ansible_version}" && \
     apk del build-deps"
+  # Install extra packages
+  if [[ -n "$2" ]]
+  then
+    _alpine_exec "apk add --no-cache $2"
+  fi
 }
 
 _get_ansible_version() {
@@ -137,7 +152,7 @@ then
       setup_host
       uninstall_alpine
       install_alpine
-      install_ansible "$1" "$2"
+      install_ansible "$@"
       show_ansible_version
       ;;
   esac

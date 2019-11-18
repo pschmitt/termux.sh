@@ -28,18 +28,18 @@ If you don't want or need the symlinks just run the `ansible-install.sh` script.
 To install the latest ansible version you can use the following: 
 
 ```bash
-ansible-install --pip
+ansible-install --pip latest
 ```
 
 The same flag applies for the install script: 
 
 ```bash
-install.sh --full --pip
+install.sh --full --pip latest
 ```
 
 ### Install a specific version of ansible
 
-By default, the latest pip version will be installed when using the `--pip` flag.
+By default, the latest pip version will be installed when using `--pip latest`.
 To install another one use:
 
 ```bash
@@ -58,9 +58,11 @@ install.sh --full --pip 2.9.1
 To install custom packages inside the alpine proot you can do this as follows:
 
 ```bash
-source ansible-install.sh
-_alpine_exec "apk update && apk add nmap"
+install.sh --full --pip 2.9.1 "git vim yadm"
+ansible-install.sh --pip 2.9.1 "git vim yadm"
 ```
+
+NOTE: This needs to be the last argument.
 
 ## Customize the symlink location
 
