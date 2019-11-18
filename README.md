@@ -36,6 +36,15 @@ To install another one use: `ansible-install.sh --pip VERSION`.
 As in: `ansible-install.sh --pip 2.9.1`.
 This also applies to the global installer: `install.sh --full --pip 2.9.1`.
 
+## Add custom packages
+
+To install custom packages inside the alpine proot you can do this as follows:
+
+```bash
+source ansible-install.sh
+_alpine_exec "apk update && apk add nmap"
+```
+
 ## Customize the symlink location
 
 By default all the symlinks will be created in the `$HOME/bin` directory.
