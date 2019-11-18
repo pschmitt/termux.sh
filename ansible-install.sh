@@ -87,6 +87,14 @@ install_ansible_pip() {
     apk del build-deps"
 }
 
+_get_ansible_version() {
+  _alpine_exec ansible --version | sed -rn 's/^ansible\s+([0-9.]+).*/\1/p' | head -1
+}
+
+show_ansible_version() {
+  echo "Installed Ansible $(_get_ansible_version)"
+}
+
 setup_host() {
   pkg install -y openssh
   setup_auth
@@ -133,6 +141,7 @@ then
       uninstall_alpine
       install_alpine
       install_ansible "$1" "$2"
+      show_ansible_version
       ;;
   esac
   cleanup
