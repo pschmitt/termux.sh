@@ -32,8 +32,9 @@ ansible-install --pip
 ```
 
 The same flag applies for the install script: 
+
 ```bash
-install.sh --full --pip`
+install.sh --full --pip
 ```
 
 ### Install a specific version of ansible
