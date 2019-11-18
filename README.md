@@ -16,7 +16,7 @@ The above config requires `$HOME/bin` to be in your `$PATH`. Adapt at will.
 
 This repo holds wrappers for ansible. It uses an alpine proot image with
 ansible on board. Somehow this gets around the
-[sem_open issue on Android 🤷])(https://github.com/termux/termux-packages/issues/1815).
+[sem_open issue on Android 🤷](https://github.com/termux/termux-packages/issues/1815).
 
 ## Setup
 
