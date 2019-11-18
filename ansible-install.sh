@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+usage() {
+  echo "Usage: $(basename $0) --uninstall|--pip [VERSION]"
+}
+
 get_tmpdir() {
   echo "${TMPDIR:-/tmp}"
 }
@@ -106,6 +110,10 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
   set -exo
   case "$1" in
+    help|h|--help|-h)
+      usage
+      exit 0
+      ;;
     uninstall|--uninstall|--rm|--delete|--del)
       uninstall_alpine
       ;;
