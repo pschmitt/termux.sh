@@ -1,11 +1,17 @@
 #!/data/data/com.termux/files/usr/bin/bash -e
-unset LD_PRELOAD
+
 # thnx to @j16180339887 for DNS picker
-addresolvconf ()
-{
-  android=$(getprop ro.build.version.release)
-  if [ ${android%%.*} -lt 8 ]; then
-  [ $(command -v getprop) ] && getprop | sed -n -e 's/^\[net\.dns.\]: \[\(.*\)\]/\1/p' | sed '/^\s*$/d' | sed 's/^/nameserver /' > ${PREFIX}/share/TermuxAlpine/etc/resolv.conf
+addresolvconf () {
+  local android
+  android="$(getprop ro.build.version.release)"
+  if [[ ${android%%.*} -lt 8 ]]
+  then
+    if command -v getprop
+    then
+      getprop | sed -n -e 's/^\[net\.dns.\]: \[\(.*\)\]/\1/p' | \
+        sed '/^\s*$/d' | \
+        sed 's/^/nameserver /' > "${PREFIX}/share/TermuxAlpine/etc/resolv.conf"
+    fi
   fi
 }
 addresolvconf
@@ -14,6 +20,7 @@ addresolvconf
 mkdir -p "$TMPDIR/dev-shm" "$TMPDIR/.ansible"
 
 # Run
+unset LD_PRELOAD
 exec proot --link2symlink -0 \
   -r "${PREFIX}/share/TermuxAlpine/" \
   -b /dev/ \
