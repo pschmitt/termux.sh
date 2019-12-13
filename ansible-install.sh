@@ -107,6 +107,18 @@ show_ansible_version() {
   echo "Installed Ansible $(_get_ansible_version)"
 }
 
+check_install() {
+  local version
+  version="$(_get_ansible_version)"
+  # Disable check to avoid doing the work twice
+  # shellcheck disable=2181
+  if [[ "$?" -ne 0 ]]
+  then
+    return 1
+  fi
+  [[ -n "$version" ]]
+}
+
 setup_host() {
   pkg install -y openssh
   setup_auth
@@ -147,7 +159,18 @@ then
     uninstall|--uninstall|--rm|--delete|--del)
       uninstall_alpine
       ;;
+    noreinstall|nr|--noreinstall|-n|--nr)
+      NOREINSTALL=1
+      shift
+      ;&
     *)
+      if [[ "$NOREINSTALL" == "1" ]]
+      then
+        if check_install
+        then
+          exit 0
+        fi
+      fi
       uninstall_alpine
       setup_host
       uninstall_alpine
