@@ -1,5 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash -e
 
+# This is loosely based on
+# https://github.com/Hax4us/TermuxAlpine/blob/master/TermuxAlpine.sh#L137-L155
+
 # thnx to @j16180339887 for DNS picker
 addresolvconf () {
   local android
