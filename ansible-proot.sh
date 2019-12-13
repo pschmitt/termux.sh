@@ -13,12 +13,6 @@ addresolvconf
 # Create temp dirs
 mkdir -p "$TMPDIR/dev-shm" "$TMPDIR/.ansible"
 
-# Ensure sshd is up
-if ! netstat -tlnp | grep -q "8022.*sshd"
-then
-  sshd
-fi
-
 # Run
 exec proot --link2symlink -0 \
   -r "${PREFIX}/share/TermuxAlpine/" \
