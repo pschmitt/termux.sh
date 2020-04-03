@@ -9,18 +9,25 @@ get_tmpdir() {
 }
 
 uninstall_alpine() {
-  local tmpdir="$(get_tmpdir)"
+  local tmpdir
+
+  tmpdir="$(get_tmpdir)"
   cd "$tmpdir"
+
   curl -LO \
     https://raw.githubusercontent.com/Hax4us/TermuxAlpine/master/TermuxAlpine.sh
   yes | bash TermuxAlpine.sh --uninstall || true
 }
 
 install_alpine() {
-  local tmpdir="$(get_tmpdir)"
+  local tmpdir
+
+  tmpdir="$(get_tmpdir)"
   cd "$tmpdir"
+
   curl -LO \
     https://raw.githubusercontent.com/Hax4us/TermuxAlpine/master/TermuxAlpine.sh
+
   # Try new install
   if ! echo -e "\n" | bash TermuxAlpine.sh
   then
@@ -31,6 +38,7 @@ install_alpine() {
 
 _alpine_exec() {
   # Exec commands inside alpine proot
+  # shellcheck disable=2034
   local LD_PRELOAD=
   # proot --link2symlink -0 \
   #   -r ${PREFIX}/share/TermuxAlpine/ \
@@ -39,7 +47,7 @@ _alpine_exec() {
   #     LANG=$LANG PATH=/bin:/usr/bin:/sbin:/usr/sbin \
   #   /bin/sh -c "$@"
   proot --link2symlink -0 \
-    -r ${PREFIX}/share/TermuxAlpine/ \
+    -r "${PREFIX}/share/TermuxAlpine/" \
     -b /dev/ -b /sys/ -b /proc/ \
     -w / \
     /usr/bin/env \
@@ -84,7 +92,7 @@ install_ansible_pip() {
     "apk add --no-cache python3 openssh bash \
       py3-cffi py3-cryptography py3-markupsafe py3-jinja2 py3-yaml && \
     apk add --no-cache -t build-deps build-base python3-dev && \
-    pip3 install -U ansible=="${ansible_version}" && \
+    pip3 install -U ansible==\"${ansible_version}\" && \
     apk del build-deps"
   # Install extra packages
   if [[ -n "$2" ]]
