@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 usage() {
-  echo "Usage: $(basename $0) [--uninstall|--pip VERSION] [PKGS]"
+  echo "Usage: $(basename "$0") [--uninstall|--pip VERSION] [PKGS]"
 }
 
 get_tmpdir() {
