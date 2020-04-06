@@ -158,7 +158,9 @@ cleanup() {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
+
   set -exo
+
   case "$1" in
     help|h|--help|-h)
       usage
@@ -187,5 +189,6 @@ then
       show_ansible_version
       ;;
   esac
+
   cleanup
 fi
