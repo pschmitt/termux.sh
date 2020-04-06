@@ -1,11 +1,41 @@
 #!/usr/bin/env bash
 
-if [[ -t 0 ]]
+case "$1" in
+  -b)
+    # Skip the -b arg
+    shift
+    ;;
+  -d)
+    set -x
+    DEBUG=1
+    shift
+    ;;
+esac
+
+# https://scripter.co/nim-check-if-stdin-stdout-are-associated-with-terminal-or-pipe/
+if [[ -t 1 ]]  # output to terminal
 then
+  if [[ -t 0 ]] # input from terminal
+  then
+    if [[ -n "$DEBUG" ]]
+    then
+      echo "Get clipboard content" >&2
+    fi
+    termux-clipboard-get
+  else  # input from pipe
+    read -r text
+    if [[ -n "$DEBUG" ]]
+    then
+      echo "Setting clipboard to \"$text\"" >&2
+    fi
+    termux-clipboard-set "$text"
+  fi
+else  # output to pipe
+  if [[ -n "$DEBUG" ]]
+  then
+    echo "Get clipboard content" >&2
+  fi
   termux-clipboard-get
-else
-  read text
-  termux-clipboard-set "$text"
 fi
 
 # vim: set ft=bash et ts=2 sw=2 :
