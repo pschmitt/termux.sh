@@ -30,8 +30,6 @@ install_alpine() {
 }
 
 _alpine_exec() {
-  # Exec commands inside alpine proot
-  local LD_PRELOAD=
   # proot --link2symlink -0 \
   #   -r ${PREFIX}/share/TermuxAlpine/ \
   #   -b /dev/ -b /sys/ -b /proc/ -b /sdcard -b /storage -b $HOME \
@@ -43,6 +41,7 @@ _alpine_exec() {
     -b /dev/ -b /sys/ -b /proc/ \
     -w / \
     /usr/bin/env \
+      LD_PRELOAD= \
       HOME=/root \
       PREFIX=/usr \
       SHELL=/bin/sh \
