@@ -43,6 +43,9 @@ _alpine_exec() {
   #   -w /home /usr/bin/env HOME=/root PREFIX=/usr SHELL=/bin/sh TERM="$TERM" \
   #     LANG=$LANG PATH=/bin:/usr/bin:/sbin:/usr/sbin \
   #   /bin/sh -c "$@"
+  local LD_PRELOAD_BACKUP="$LD_PRELOAD"
+  unset LD_PRELOAD
+
   proot --link2symlink -0 \
     -r "${PREFIX}/share/TermuxAlpine/" \
     -b /dev/ -b /sys/ -b /proc/ \
@@ -56,6 +59,8 @@ _alpine_exec() {
       LANG="$LANG" \
       PATH=/bin:/usr/bin:/sbin:/usr/sbin \
     /bin/sh -c "$@"
+
+  export LD_PRELOAD="$LD_PRELOAD_BACKUP"
 }
 
 install_ansible() {
