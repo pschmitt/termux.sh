@@ -7,7 +7,7 @@ DEST="${DEST:-${HOME}/bin}"
 mkdir -p "$DEST"
 
 # "Fake" commands
-for file in termux_notify-send.sh termux_xsel.sh
+for file in termux_notify-send.sh termux_xsel.sh termux_adbd-network.sh
 do
   ln -sf "$(realpath "$file")" \
     "${DEST}/$(sed -nr 's/^termux_(.+).sh$/\1/p' <<< "$file")"
