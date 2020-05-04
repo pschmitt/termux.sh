@@ -12,7 +12,7 @@ case "$1" in
     exit 0
     ;;
   enable)
-    su -c "dumpsys deviceidle disable"
+    su -c "dumpsys deviceidle enable"
     ;;
   disable)
     su -c "dumpsys deviceidle disable"
