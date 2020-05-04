@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 usage() {
-  echo "$(basename "$0") fullscreen|disable"
+  echo "Usage: $(basename "$0") fullscreen|disable"
 }
 
 enable_fullscreen() {
