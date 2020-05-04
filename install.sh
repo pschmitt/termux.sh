@@ -7,17 +7,17 @@ DEST="${DEST:-${HOME}/bin}"
 mkdir -p "$DEST"
 
 # "Fake" commands
-for file in termux_notify-send.sh termux_xsel.sh termux_adbd-network.sh
+for file in scripts/*.sh
 do
   ln -sf "$(realpath "$file")" \
-    "${DEST}/$(sed -nr 's/^termux_(.+).sh$/\1/p' <<< "$file")"
+    "${DEST}/$(sed -r 's/termux_(.+).sh/\1/; s/.sh$//' <<< "$file")"
 done
 
 # Ansible
 if [[ "$1" == "--full" ]]
 then
   shift
-  ./ansible-install.sh "$@"
+  ./ansible/ansible-install.sh "$@"
 fi
 
 ANSIBLE_COMMANDS=(
@@ -36,10 +36,10 @@ ANSIBLE_COMMANDS=(
 
 for cmd in "${ANSIBLE_COMMANDS[@]}"
 do
-  ln -sf "$(realpath ansible-wrapper.sh)" \
+  ln -sf "$(realpath ansible/ansible-wrapper.sh)" \
     "${DEST}/${cmd}"
 done
 
 # Symlink ansible-install.sh
-ln -sf "$(realpath ansible-install.sh)" \
+ln -sf "$(realpath ansible/ansible-install.sh)" \
   "${DEST}/ansible-install.sh"
