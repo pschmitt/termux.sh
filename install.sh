@@ -10,7 +10,7 @@ mkdir -p "$DEST"
 for file in scripts/*.sh
 do
   ln -sf "$(realpath "$file")" \
-    "${DEST}/$(sed -r 's/termux_(.+).sh/\1/; s/.sh$//' <<< "$file")"
+    "${DEST}/$(basename "$file" | sed -r 's/termux_(.+).sh/\1/; s/.sh$//')"
 done
 
 # Ansible
