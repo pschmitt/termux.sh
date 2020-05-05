@@ -102,12 +102,8 @@ then
 elif [[ -x "$BINPRE/$1" ]]
 then
   CMDLINE="$CMDLINE;$BINPRE/$ARGS"
-elif [[ -x $SYSBIN/$1 ]] || [[ -x $SYSXBIN/$1 ]] || [[ -x $1 ]]
-then
-  CMDLINE="$CMDLINE;$ARGS"
 else
-  echo "Command $(color 1 "$1") not found"
-  color 2 "Check your spelling and try again"
+  CMDLINE="$CMDLINE;$ARGS"
 fi
 
 pre_env_chk=$("$SU" --help | grep -e --preserve-environment)
