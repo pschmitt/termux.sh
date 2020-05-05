@@ -20,4 +20,4 @@ get_ipv4_dns() {
   getprop | grep net.dns | \
     awk -v RS='([0-9]+\\.){3}[0-9]+' '/dns/ RT{print RT; exit}'
 }
-ping -c 3 -i 0.5 "$(get_ipv4_dns)" >/dev/null
+ping -c 10 -i 0.25 -s 0 "$(get_ipv4_dns)" >/dev/null
