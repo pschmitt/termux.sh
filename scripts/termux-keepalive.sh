@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
 # https://github.com/termux/termux-packages/issues/1193
+# https://github.com/termux/termux-packages/issues/491
+# https://dontkillmyapp.com/general?app=Tasker
 
 termux-wake-lock
+
+# Disable android doze
+su -c "dumpsys deviceidle disable"
 
 # Disable wifi power saving
 su -c "iw wlan0 set power_save off"
