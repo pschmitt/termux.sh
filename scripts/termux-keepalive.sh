@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 # https://github.com/termux/termux-packages/issues/1193
 # https://github.com/termux/termux-packages/issues/491
 # https://dontkillmyapp.com/general?app=Tasker
@@ -20,4 +22,6 @@ get_ipv4_dns() {
   getprop | grep net.dns | \
     awk -v RS='([0-9]+\\.){3}[0-9]+' '/dns/ RT{print RT; exit}'
 }
-ping -c 10 -i 0.25 -s 0 "$(get_ipv4_dns)" >/dev/null
+ping -c 10 -i 0.25 -s 0 "$(get_ipv4_dns)"
+
+# termux-telephony-call 000
