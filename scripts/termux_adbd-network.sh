@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 usage() {
-  echo "Usage: $(basename "$0") start|stop"
+  echo "Usage: $(basename "$0") start|stop|restart"
 }
 
 set_adbd_port() {
@@ -9,7 +9,7 @@ set_adbd_port() {
 }
 
 enable_nw_adb() {
-  set_adbd_port 5555
+  set_adbd_port "${ADBD_PORT:-5555}"
 }
 
 disable_nw_adb() {
@@ -26,6 +26,10 @@ case "$1" in
     ;;
   stop|disable)
     disable_nw_adb
+    ;;
+  restart)
+    disable_nw_adb
+    enable_nw_adb
     ;;
   *)
     usage
