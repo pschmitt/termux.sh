@@ -4,6 +4,14 @@
 # https://github.com/termux/termux-packages/issues/491
 # https://dontkillmyapp.com/general?app=Tasker
 
+seppuku() {
+  {
+    sleep "${MAX_RUNTIME:-60}"
+    echo "Committing seppuku">&2
+    kill $$
+  } &
+}
+
 disable_android_doze() {
   su -c "dumpsys deviceidle disable"
 }
@@ -46,15 +54,31 @@ ping_default_gw() {
   ping -c 10 -i 0.25 -s 0 "$(get_default_gateway)"
 }
 
+wifi_is_connected() {
+  termux-wifi-connectioninfo | jq -r .supplicant_state | grep -q "COMPLETED"
+}
+
+wifi_enable() {
+  if ! wifi_is_connected
+  then
+    termux-wifi-enable true
+    termux-display on
+  fi
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
   set -x
+
+  seppuku
 
   termux-wake-lock
 
   disable_android_doze
   disable_wifi_power_saving
   # disable_ipv6
+
+  wifi_enable
 
   ping_default_gw
 
