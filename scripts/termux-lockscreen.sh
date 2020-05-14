@@ -4,11 +4,11 @@ usage() {
   echo "Usage: $(basename "$0") lock | unlock [PIN] | state"
 }
 
-__swipe_up() {
+swipe_up() {
   adb-self shell input swipe 200 900 200 300
 }
 
-__enter_pin() {
+enter_pin() {
   adb-self shell input text "$1"
   adb-self shell input keyevent ENTER
 }
@@ -29,11 +29,11 @@ unlock() {
     return
   fi
   wake_screen
-  __swipe_up
+  swipe_up
 
   if [[ -n "$1" ]] && is_locked
   then
-    __enter_pin "$1"
+    enter_pin "$1"
   fi
 }
 
