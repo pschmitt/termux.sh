@@ -17,14 +17,6 @@ wake_screen() {
   termux-display on
 }
 
-screen_is_on() {
-  termux-display state | grep -q on
-}
-
-screen_is_off() {
-  ! screen_is_on
-}
-
 is_locked() {
   su -c "dumpsys window" | \
     sed -nr 's/.*mDreamingLockscreen=(true|false).*/\1/p' | \
@@ -46,7 +38,7 @@ unlock() {
 }
 
 lock() {
-  screen_is_off || adb-self shell input keyevent POWER
+  termux-display off
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
