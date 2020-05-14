@@ -56,10 +56,10 @@ then
       usage
       exit 0
       ;;
-    lock)
+    lock|off|disable)
       lock
       ;;
-    unlock)
+    unlock|on|enable)
       shift
       unlock "$@"
       ;;
