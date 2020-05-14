@@ -31,7 +31,7 @@ unlock() {
   wake_screen
   __swipe_up
 
-  if [[ -n "$1" ]]
+  if [[ -n "$1" ]] && is_locked
   then
     __enter_pin "$1"
   fi
