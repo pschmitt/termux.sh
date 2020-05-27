@@ -17,6 +17,7 @@ APP_NAME=termux
 EXPIRE_TIME=
 URGENCY=default # high/low/max/min/default
 VIBRATION_PATTERN=800,500,1000
+EXTRA_ARGS=()
 
 while true
 do
@@ -31,10 +32,15 @@ do
       ;;
     -t|--expire-time)
       shift
-      if [[ -n "$1" ]]
+      if [[ "$1" =~ ^[0-9]+([.][0-9]+)?$ ]]
       then
         EXPIRE_TIME="$1"
+        NOTIFICATION_ID="$RANDOM"
+        EXTRA_ARGS+=(-i "$NOTIFICATION_ID")
         shift
+      else
+        echo "Invalid expire-time: $1" >&2
+        exit 2
       fi
       ;;
     -u|--urgency)
@@ -67,10 +73,16 @@ TITLE="$1"
 CONTENT="$2"
 
 termux-notification \
+  "${EXTRA_ARGS[@]}" \
   --group "$APP_NAME" \
   --vibrate "$VIBRATION_PATTERN" \
   --priority "$URGENCY" \
   -t "$TITLE" \
   -c "$CONTENT"
+
+if [[ "$EXPIRE_TIME" ]]
+then
+  (sleep "$EXPIRE_TIME"; termux-notification-remove "$NOTIFICATION_ID")&
+fi
 
 # vim: set ft=bash et ts=2 sw=2 :
