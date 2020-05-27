@@ -23,6 +23,8 @@ usage() {
   exit 0
 }
 
+unset LS_COLORS
+
 PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
 PRE="$(dirname "$PREFIX")"
 
