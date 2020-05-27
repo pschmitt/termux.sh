@@ -35,6 +35,8 @@ do
       if [[ "$1" =~ ^[0-9]+([.][0-9]+)?$ ]]
       then
         EXPIRE_TIME="$1"
+        # Convert from milliseconds
+        EXPIRE_TIME="$(( EXPIRE_TIME / 1000 ))"
         NOTIFICATION_ID="$RANDOM"
         EXTRA_ARGS+=(-i "$NOTIFICATION_ID")
         shift
