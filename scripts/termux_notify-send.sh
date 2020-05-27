@@ -4,7 +4,7 @@
 # echo "DOLLAR 2: $2" >> $TMPDIR/notify_send.log
 # echo "DOLLAR ALL: $@" >> $TMPDIR/notify_send.log
 
-ARGS=$(getopt -o a:e:u: -l "app-name:,expire-time:,urgency:" -n "$(basename "$0")" -- "$@")
+ARGS=$(getopt -o a:t:u: -l "app-name:,expire-time:,urgency:" -n "$(basename "$0")" -- "$@")
 eval set -- "$ARGS";
 
 if [[ $? -ne 0 ]]
@@ -29,7 +29,7 @@ do
         shift
       fi
       ;;
-    -e|--expire-time)
+    -t|--expire-time)
       shift
       if [[ -n "$1" ]]
       then
