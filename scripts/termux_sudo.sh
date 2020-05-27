@@ -1,12 +1,12 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-#set colored=true to turn on colored error messages
-#set colored=false to turn off colored error messages
-colored=true
+#set COLORED=1 to turn on colored error messages
+#set COLORED=0 to turn off colored error messages
+COLORED=${COLORED:-1}
 
 #red=1 green=2 yellow=3
 color() {
-  if [[ "$colored" == "true" ]]
+  if [[ "$COLORED" == "1" ]]
   then
     echo "$(tput setaf "$1")${*:2}$(tput sgr0)"
   else
@@ -14,7 +14,7 @@ color() {
   fi
 }
 
-show_usage() {
+usage() {
   color 3 "Usage:"
   echo "sudo su [-]"
   echo "  $(color 2 Drop to root shell)"
@@ -23,14 +23,17 @@ show_usage() {
   exit 0
 }
 
+PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+PRE="$(dirname "$PREFIX")"
+
 SYSBIN=/system/bin
 SYSXBIN=/system/xbin
 BB="$SYSXBIN/busybox"
-PRE=/data/data/com.termux/files
-ROOT_HOME="$PRE/home/.suroot"
-BINPRE="$PRE/usr/bin"
-LDLP="export LD_LIBRARY_PATH=$PRE/usr/lib"
-CMDLINE="PATH=$PATH:$SYSXBIN:$SYSBIN;$LDLP;HOME=$ROOT_HOME;export TERM=$TERM;cd $PWD"
+
+ROOT_HOME="${HOME:-${PRE}/home}/.suroot"
+BINPRE="$PREFIX/bin"
+LDLP_EXPORT="export LD_LIBRARY_PATH=$PREFIX/lib"
+CMDLINE="PATH=$PATH:$SYSXBIN:$SYSBIN;$LDLP_EXPORT;HOME=$ROOT_HOME;export TERM=$TERM;cd $PWD"
 
 if [[ -x /magisk/.core/bin/su ]]
 then
@@ -50,9 +53,9 @@ else
   exit
 fi
 
-if [[ ! -d $ROOT_HOME ]]
+if [[ ! -d "$ROOT_HOME" ]]
 then
-  if [[ -x $BB ]] && [[ $($BB --list | grep -w mount) == "mount" ]]
+  if [[ -x "$BB" ]] && [[ $("$BB" --list | grep -w mount) == "mount" ]]
   then
     MOUNTEX="$BB mount"
   elif [[ -x $SYSBIN/mount ]]
@@ -71,7 +74,7 @@ then
     "$SU" -c "$CMDLINE;$MOUNT_RW"
     "$SU" -c "$CMDLINE;mkdir $ROOT_HOME"
     "$SU" -c "$CMDLINE;chmod 700 $ROOT_HOME"
-    BASHRC="'PS1=\"# \"\nexport TERM=$TERM\n$LDLP\nexport PATH=$PATH:$SYSXBIN:$SYSBIN'"
+    BASHRC="'PS1=\"# \"\nexport TERM=$TERM\n$LDLP_EXPORT\nexport PATH=$PATH:$SYSXBIN:$SYSBIN'"
     "$SU" -c "$CMDLINE;echo -e $BASHRC > $ROOT_HOME/.bashrc"
     "$SU" -c "$CMDLINE;chmod 700 $ROOT_HOME/.bashrc"
     "$SU" -c "$CMDLINE;$MOUNT_RO"
@@ -79,7 +82,7 @@ then
     "$SU" -c "$MOUNT_RW"
     "$SU" -c "mkdir $ROOT_HOME"
     "$SU" -c "chmod 700 $ROOT_HOME"
-    BASHRC="'PS1=\"# \"\nexport TERM=$TERM\n$LDLP\nexport PATH=$PATH:$SYSXBIN:$SYSBIN'"
+    BASHRC="'PS1=\"# \"\nexport TERM=$TERM\n$LDLP_EXPORT\nexport PATH=$PATH:$SYSXBIN:$SYSBIN'"
     "$SU" -c "echo -e $BASHRC > $ROOT_HOME/.bashrc"
     "$SU" -c "chmod 700 $ROOT_HOME/.bashrc"
     "$SU" -c "$MOUNT_RO"
@@ -92,33 +95,36 @@ then
   shift
 fi
 
-ARGS=$(printf '%q ' "$@")
+ARGS=("$@")
 
-if [[ -z "$*" ]]; then
-  show_usage
+if [[ -z "$*" ]]
+then
+  usage
 elif [[ "$1" == "su" ]]
 then
   CMDLINE="$CMDLINE;$BINPRE/bash"
 elif [[ -x "$BINPRE/$1" ]]
 then
-  CMDLINE="$CMDLINE;$BINPRE/$ARGS"
+  CMDLINE="$CMDLINE;$BINPRE/${ARGS[@]}"
 else
-  CMDLINE="$CMDLINE;$ARGS"
+  CMDLINE="$CMDLINE;${ARGS[@]}"
 fi
 
-pre_env_chk=$("$SU" --help | grep -e --preserve-environment)
+EXTRA_ARGS=()
+if "$SU" --help | grep -q -e --preserve-environment
+then
+  EXTRA_ARGS+=(--preserve-environment)
+fi
 
 if [[ -x "/sbin/magisk" ]]
 then
   unset LD_LIBRARY_PATH
 fi
 
-if [[ -n "$pre_env_chk" ]]
-then
-  "$SU" --preserve-environment -c "$CMDLINE"
-else
-  "$SU" -c "$CMDLINE"
-fi
+"$SU" "${EXTRA_ARGS[@]}" -c "$CMDLINE"
+RC="$?"
 
 # Reset echo
-stty sane
+stty sane &>/dev/null
+
+exit "$RC"
