@@ -26,13 +26,12 @@ usage() {
 unset LS_COLORS
 
 PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
-PRE="$(dirname "$PREFIX")"
 
 SYSBIN=/system/bin
 SYSXBIN=/system/xbin
 BB="$SYSXBIN/busybox"
 
-ROOT_HOME="${HOME:-${PRE}/home}/.suroot"
+ROOT_HOME="${HOME:-$(dirname "$PREFIX")/home}/.suroot"
 BINPRE="$PREFIX/bin"
 LDLP_EXPORT="export LD_LIBRARY_PATH=$PREFIX/lib"
 CMDLINE="PATH=$PATH:$SYSXBIN:$SYSBIN;$LDLP_EXPORT;HOME=$ROOT_HOME;export TERM=$TERM;cd $PWD"
