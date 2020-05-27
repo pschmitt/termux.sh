@@ -74,7 +74,7 @@ then
   then
     unset LD_LIBRARY_PATH
     "$SU" -c "$CMDLINE;$MOUNT_RW"
-    "$SU" -c "$CMDLINE;mkdir $ROOT_HOME"
+    "$SU" -c "$CMDLINE;mkdir -p $ROOT_HOME"
     "$SU" -c "$CMDLINE;chmod 700 $ROOT_HOME"
     BASHRC="'PS1=\"# \"\nexport TERM=$TERM\n$LDLP_EXPORT\nexport PATH=$PATH:$SYSXBIN:$SYSBIN'"
     "$SU" -c "$CMDLINE;echo -e $BASHRC > $ROOT_HOME/.bashrc"
@@ -82,7 +82,7 @@ then
     "$SU" -c "$CMDLINE;$MOUNT_RO"
   else
     "$SU" -c "$MOUNT_RW"
-    "$SU" -c "mkdir $ROOT_HOME"
+    "$SU" -c "mkdir -p $ROOT_HOME"
     "$SU" -c "chmod 700 $ROOT_HOME"
     BASHRC="'PS1=\"# \"\nexport TERM=$TERM\n$LDLP_EXPORT\nexport PATH=$PATH:$SYSXBIN:$SYSBIN'"
     "$SU" -c "echo -e $BASHRC > $ROOT_HOME/.bashrc"
