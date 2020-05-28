@@ -4,14 +4,27 @@
 # echo "DOLLAR 2: $2" >> $TMPDIR/notify_send.log
 # echo "DOLLAR ALL: $@" >> $TMPDIR/notify_send.log
 
-ARGS=$(getopt -o a:t:u: -l "app-name:,expire-time:,urgency:" -n "$(basename "$0")" -- "$@")
-eval set -- "$ARGS";
+usage() {
+  echo "Usage:"
+  echo -e "  $(basename "$0") [OPTION…] <SUMMARY> [BODY]\n"
+  echo "Options:"
+  echo "  -a, --app-name          Specifies the app name"
+  echo "  -t, --expire-time TIME  Specifies the timeout in milliseconds at which to expire the notification."
+  echo "  -u, --urgency LEVEL     Specifies the urgency level (low, normal, critical)."
+}
 
-if [[ $? -ne 0 ]]
+ARGS=$(getopt -o a:t:u: -l "app-name:,expire-time:,urgency:" \
+              -n "$(basename "$0")" -- "$@")
+
+# FIXME Disable SC2181 since doing "if ! ARGS=.." makes the script unparsable in vim
+# shellcheck disable=2181
+if [[ "$?" != "0" ]]
 then
-  usage
-  exit 1
+  usage >&2
+  exit 2
 fi
+
+eval set -- "$ARGS";
 
 APP_NAME=termux
 EXPIRE_TIME=
