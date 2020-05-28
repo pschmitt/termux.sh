@@ -17,6 +17,9 @@ ARGS=$(getopt -o a:t:u: -l "app-name:,expire-time:,urgency:" \
               -n "$(basename "$0")" -- "$@")
 
 # FIXME Disable SC2181 since doing "if ! ARGS=.." makes the script unparsable in vim
+# https://github.com/tree-sitter/tree-sitter-bash/issues/86
+# if ! ARGS=$(getopt -o a:t:u: -l "app-name:,expire-time:,urgency:" \
+#               -n "$(basename "$0")" -- "$@")
 # shellcheck disable=2181
 if [[ "$?" != "0" ]]
 then
