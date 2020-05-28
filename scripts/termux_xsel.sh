@@ -23,12 +23,7 @@ then
     fi
     termux-clipboard-get
   else  # input from pipe
-    text=""
-    while read -r LINE
-    do
-      text+="$LINE\n"
-    done < /dev/stdin
-    text=" ${text%\\n}"  # remove trailing \n
+    text=$(< /dev/stdin)
     if [[ -n "$DEBUG" ]]
     then
       echo -e "Setting clipboard to \"$text\"" >&2
