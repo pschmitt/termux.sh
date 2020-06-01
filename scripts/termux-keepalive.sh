@@ -66,6 +66,14 @@ wifi_enable() {
   fi
 }
 
+sshd_check() {
+  # if ! su -c "ss -tlnp" | grep -q ":8022.*sshd"
+  if ! nc localhost "${SSHD_PORT:-8022}" <<< "EXIT" 2>/dev/null | grep -q SSH
+  then
+    sshd
+  fi
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
   set -x
@@ -81,6 +89,8 @@ then
   wifi_enable
 
   ping_default_gw
+
+  sshd_check
 
   # Keep screen on
   # termux-telephony-call 000
