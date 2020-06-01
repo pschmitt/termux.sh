@@ -90,7 +90,7 @@ then
 
   ping_default_gw
 
-  sshd_check
+  # sshd_check
 
   # Keep screen on
   # termux-telephony-call 000
