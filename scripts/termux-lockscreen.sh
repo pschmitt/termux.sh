@@ -4,10 +4,6 @@ usage() {
   echo "Usage: $(basename "$0") lock | unlock [PIN] | state"
 }
 
-swipe_up() {
-  adb-self shell input swipe 200 900 200 300
-}
-
 enter_pin() {
   adb-self shell input text "$1"
   adb-self shell input keyevent ENTER
@@ -19,8 +15,11 @@ wake_screen() {
 
 is_locked() {
   su -c "dumpsys window" | \
-    sed -nr 's/.*mDreamingLockscreen=(true|false).*/\1/p' | \
-    grep -q true
+    grep -q "mDreamingLockscreen=true"
+}
+
+is_lockscreen_displayed() {
+  su -c "dumpsys power" | grep -q 'mHoldingDisplaySuspendBlocker=true'
 }
 
 unlock() {
@@ -28,10 +27,12 @@ unlock() {
   then
     return
   fi
-  wake_screen
-  swipe_up
 
-  if [[ -n "$1" ]] && is_locked
+  wake_screen
+  # menu key
+  adb-self shell input keyevent 82
+
+  if is_lockscreen_displayed && [[ -n "$1" ]]
   then
     enter_pin "$1"
   fi
