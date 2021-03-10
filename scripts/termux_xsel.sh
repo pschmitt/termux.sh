@@ -1,41 +1,43 @@
-#!/usr/bin/env bash
+#!/data/data/com.termux/files/usr/bin/env bash
 
-case "$1" in
-  -b)
-    # Skip the -b arg
-    shift
-    ;;
-  -d)
-    set -x
-    DEBUG=1
-    shift
-    ;;
-esac
+while [[ -n "$*" ]]
+do
+  case "$1" in
+    -p|--primary|--secondary|-s|--clipboard|-b)
+      # Skip the selection arg
+      shift
+      ;;
+    -o|--output)
+      OUT=1
+      shift
+      ;;
+    -i|--input)
+      IN=1
+      shift
+      ;;
+    -d|--debug)
+      set -x
+      DEBUG=1
+      shift
+      ;;
+  esac
+done
 
 # https://scripter.co/nim-check-if-stdin-stdout-are-associated-with-terminal-or-pipe/
-if [[ -t 1 ]]  # output to terminal
+if [[ -n "$OUT" && -z "$IN" ]] || [[ -t 0 ]]
 then
-  if [[ -t 0 ]] # input from terminal
-  then
-    if [[ -n "$DEBUG" ]]
-    then
-      echo "Get clipboard content" >&2
-    fi
-    termux-clipboard-get
-  else  # input from pipe
-    text=$(< /dev/stdin)
-    if [[ -n "$DEBUG" ]]
-    then
-      echo -e "Setting clipboard to \"$text\"" >&2
-    fi
-    termux-clipboard-set -- "$text"
-  fi
-else  # output to pipe
   if [[ -n "$DEBUG" ]]
   then
     echo "Get clipboard content" >&2
   fi
   termux-clipboard-get
+else  # input from pipe
+  text=$(< /dev/stdin)
+  if [[ -n "$DEBUG" ]]
+  then
+    echo -e "Setting clipboard to \"$text\"" >&2
+  fi
+  termux-clipboard-set -- "$text"
 fi
 
 # vim: set ft=bash et ts=2 sw=2 :
