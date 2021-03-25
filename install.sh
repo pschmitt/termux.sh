@@ -9,7 +9,7 @@ mkdir -p "$DEST"
 # "Fake" commands
 for file in scripts/*.sh
 do
-  ln -sf "$(realpath "$file")" \
+  ln -sfv "$(realpath "$file")" \
     "${DEST}/$(basename "$file" | sed -r 's/termux_(.+).sh/\1/; s/.sh$//')"
 done
 
@@ -36,10 +36,10 @@ ANSIBLE_COMMANDS=(
 
 for cmd in "${ANSIBLE_COMMANDS[@]}"
 do
-  ln -sf "$(realpath ansible/ansible-wrapper.sh)" \
+  ln -sfv "$(realpath ansible/ansible-wrapper.sh)" \
     "${DEST}/${cmd}"
 done
 
 # Symlink ansible-install.sh
-ln -sf "$(realpath ansible/ansible-install.sh)" \
+ln -sfv "$(realpath ansible/ansible-install.sh)" \
   "${DEST}/ansible-install.sh"
