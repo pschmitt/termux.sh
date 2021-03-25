@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e -o pipefail
+
 cd "$(readlink -f "$(dirname "$0")")" || exit 9
 
 DEST="${DEST:-${HOME}/bin}"
