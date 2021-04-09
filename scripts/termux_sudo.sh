@@ -43,6 +43,9 @@ then
 elif [[ -x /sbin/su ]]
 then
   SU=/sbin/su
+elif [[ -x "$SYSBIN/su" ]]
+then
+  SU="$SYSBIN/su"
 elif [[ -x "$SYSXBIN/su" ]]
 then
   SU="$SYSXBIN/su"
