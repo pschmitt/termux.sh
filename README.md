@@ -2,15 +2,28 @@ Here lie a few scripts that are useful for termux users.
 
 # Installation
 
-## zplugin
+## zinit
 
 ```bash
-zplugin ice wait lucid pick"/dev/null" has"termux-info" \
-  atclone'./install.sh' atpull"%atclone"
-zplugin light pschmitt/termux.sh
+zinit has"termux-info" \
+    wait lucid light-mode \
+    as"null" \
+    atclone'DEST="${ZPFX}/bin" ./install.sh' \
+    atpull"%atclone" \
+    run-atpull \
+    atdelete'for f in ${ZPFX}/bin/*
+             do
+               if readlink -f "$f" | \
+                 grep -qE "$ZINIT[PLUGINS_DIR]/pschmitt.*termux.sh"
+               then
+                 rm -fv "$f"
+               fi
+             done' \
+  for pschmitt/termux.sh
 ```
 
-The above config requires `$HOME/bin` to be in your `$PATH`. Adapt at will.
+The above config requires `$ZPFX/bin` to be in your `$PATH`, which should be the 
+case by default. Adapt at will.
 
 # Ansible
 
