@@ -76,7 +76,7 @@ install_ansible() {
 }
 
 install_ansible_pkg() {
-  _alpine_exec "apk add --no-cache ansible openssh bash"
+  _alpine_exec "apk add --no-cache ansible bash gnupg openssh"
   # Install extra packages
   if [[ -n "$1" ]]
   then
