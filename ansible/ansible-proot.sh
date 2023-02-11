@@ -32,6 +32,7 @@ exec proot --link2symlink -0 \
   -b "$TMPDIR/dev-shm:/dev/shm" \
   -b "$TMPDIR/.ansible:/home/.ansible" \
   -b "$HOME" \
+  -b "$HOME/.config/gnupg:/home/.config/gnupg" \
   -b "$HOME/.ssh/id_ed25519_ansible:/home/.ssh/id_ed25519_ansible" \
   -b "$PWD:/ansible" \
   -w /ansible \
