@@ -93,7 +93,7 @@ install_ansible_pip() {
   # Install requirements
   _alpine_exec \
     "apk add --no-cache python3 openssh bash \
-      py3-pip py3-cffi py3-cryptography py3-markupsafe py3-jinja2 py3-yaml && \
+      py3-pip py3-setuptools py3-cffi py3-cryptography py3-markupsafe py3-jinja2 py3-yaml && \
     apk add --no-cache -t build-deps build-base python3-dev && \
     pip3 install -U ansible==\"${ansible_version}\" && \
     apk del build-deps"
