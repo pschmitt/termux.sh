@@ -45,6 +45,7 @@ exec proot --link2symlink -0 \
   -b "$HOME" \
   -b "$HOME/.config/gnupg:/home/.config/gnupg" \
   -b "$HOME/.ssh/id_ed25519_ansible:/home/.ssh/id_ed25519_ansible" \
+  -b "$HOME/.ssh/known_hosts:/home/.ssh/known_hosts" \
   -b "$PWD:/ansible" \
   -w /ansible \
   /usr/bin/env \
