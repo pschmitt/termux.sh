@@ -44,16 +44,18 @@ install_ansible_pkg() {
 
 install_ansible_pip() {
   local ansible_version="$1"
-  if [[ "$ansible_version" == "latest" ]]
+  local ansible_spec="ansible"
+
+  if [[ -n "$ansible_version" && "$ansible_version" != "latest" ]]
   then
-    ansible_version="$(_get_latest_ansible_version)"
+    ansible_spec="ansible==${ansible_version}"
   fi
   # Install requirements
   _alpine_exec \
     "apk add --no-cache python3 openssh bash \
-      py3-pip py3-setuptools py3-cffi py3-cryptography py3-markupsafe py3-jinja2 py3-yaml && \
+      py3-pip py3-setuptools py3-cffi py3-cryptography py3-markupsafe py3-dnspython py3-jinja2 py3-yaml gnupg sops && \
     apk add --no-cache -t build-deps build-base python3-dev && \
-    pip3 install -U ansible==\"${ansible_version}\" && \
+    pip3 install -U \"${ansible_spec}\" && \
     apk del build-deps"
   # Install extra packages
   if [[ -n "$2" ]]
@@ -66,12 +68,6 @@ _get_ansible_version() {
   local v
   v=$(_alpine_exec "ansible --version" 2>/dev/null)
   sed -rn 's/^ansible\s+\[core\s+([0-9.]+).*/\1/p' <<< "$v" | head -1
-}
-
-_get_latest_ansible_version() {
-  git ls-remote --tags https://github.com/ansible/ansible | \
-    sed -rn 's|.*refs/tags/v?([^\^]+)(\^\{\})?|\1|p' | \
-    tail -1
 }
 
 show_ansible_version() {
