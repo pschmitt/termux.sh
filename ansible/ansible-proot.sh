@@ -27,7 +27,15 @@ unset LD_PRELOAD
 
 PROOT_ALIAS="${PROOT_ALIAS:-ansible}"
 
+CMD=("$@")
+
+if [[ -z "${CMD[*]}" ]]
+then
+  CMD=(ash)
+fi
+
 exec proot --link2symlink -0 \
+  --kill-on-exit \
   -r "${PREFIX}/var/lib/proot-distro/installed-rootfs/${PROOT_ALIAS}/" \
   -b /dev/ \
   -b /proc/ \
@@ -47,4 +55,4 @@ exec proot --link2symlink -0 \
     LANG="$LANG" \
     XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}" \
     PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-  /bin/sh -c "$@"
+  /bin/sh -c "${CMD[@]}"
