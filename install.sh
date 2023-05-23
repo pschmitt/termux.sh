@@ -42,6 +42,9 @@ do
     "${DEST}/${cmd}"
 done
 
-# Symlink ansible-install.sh
-ln -sfv "$(realpath ansible/ansible-install.sh)" \
-  "${DEST}/ansible-install.sh"
+# Symlink ansible-install.sh and ansible-proot.sh
+for cmd in ansible-install.sh ansible-proot.sh
+do
+  ln -sfv "$(realpath "ansible/${cmd}")" \
+    "${DEST}/${cmd}"
+done

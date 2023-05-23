@@ -24,7 +24,9 @@ mkdir -p "$TMPDIR/dev-shm" "$TMPDIR/.ansible"
 
 # Run
 unset LD_PRELOAD
-PROOT_ALIAS="ansible"
+
+PROOT_ALIAS="${PROOT_ALIAS:-ansible}"
+
 exec proot --link2symlink -0 \
   -r "${PREFIX}/var/lib/proot-distro/installed-rootfs/${PROOT_ALIAS}/" \
   -b /dev/ \
