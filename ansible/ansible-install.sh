@@ -9,58 +9,16 @@ get_tmpdir() {
 }
 
 uninstall_alpine() {
-  local tmpdir
-
-  tmpdir="$(get_tmpdir)"
-  cd "$tmpdir"
-
-  curl -LO \
-    https://raw.githubusercontent.com/Hax4us/TermuxAlpine/master/TermuxAlpine.sh
-  yes | bash TermuxAlpine.sh --uninstall || true
+  proot-distro remove ansible || true
 }
 
 install_alpine() {
-  local tmpdir
-
-  tmpdir="$(get_tmpdir)"
-  cd "$tmpdir"
-
-  curl -LO \
-    https://raw.githubusercontent.com/Hax4us/TermuxAlpine/master/TermuxAlpine.sh
-
-  # Try new install
-  if ! echo -e "\n" | bash TermuxAlpine.sh
-  then
-    # reinstall
-    yes | bash TermuxAlpine.sh
-  fi
+  proot-distro install --override-alias ansible alpine
+  _alpine_exec "echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories"
 }
 
 _alpine_exec() {
-  # proot --link2symlink -0 \
-  #   -r ${PREFIX}/share/TermuxAlpine/ \
-  #   -b /dev/ -b /sys/ -b /proc/ -b /sdcard -b /storage -b $HOME \
-  #   -w /home /usr/bin/env HOME=/root PREFIX=/usr SHELL=/bin/sh TERM="$TERM" \
-  #     LANG=$LANG PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-  #   /bin/sh -c "$@"
-  local LD_PRELOAD_BACKUP="$LD_PRELOAD"
-  unset LD_PRELOAD
-
-  proot --link2symlink -0 \
-    -r "${PREFIX}/share/TermuxAlpine/" \
-    -b /dev/ -b /sys/ -b /proc/ \
-    -w / \
-    /usr/bin/env \
-      LD_PRELOAD= \
-      HOME=/root \
-      PREFIX=/usr \
-      SHELL=/bin/sh \
-      TERM="$TERM" \
-      LANG="$LANG" \
-      PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-    /bin/sh -c "$@"
-
-  export LD_PRELOAD="$LD_PRELOAD_BACKUP"
+  proot-distro login --termux-home ansible -- ash -c "$@"
 }
 
 install_ansible() {
@@ -76,7 +34,7 @@ install_ansible() {
 }
 
 install_ansible_pkg() {
-  _alpine_exec "apk add --no-cache ansible bash gnupg py3-setuptools openssh sops"
+  _alpine_exec "apk add --no-cache ansible bash gnupg py3-setuptools py3-dnspython openssh sops"
   # Install extra packages
   if [[ -n "$1" ]]
   then
@@ -105,7 +63,9 @@ install_ansible_pip() {
 }
 
 _get_ansible_version() {
-  _alpine_exec "ansible --version" | sed -rn 's/^ansible\s+([0-9.]+).*/\1/p' | head -1
+  local v
+  v=$(_alpine_exec "ansible --version" 2>/dev/null)
+  sed -rn 's/^ansible\s+\[core\s+([0-9.]+).*/\1/p' <<< "$v" | head -1
 }
 
 _get_latest_ansible_version() {
@@ -131,7 +91,7 @@ check_install() {
 }
 
 setup_host() {
-  pkg install -y openssh
+  pkg install -y openssh proot-distro
   setup_auth
   start_sshd
 }
@@ -153,10 +113,6 @@ setup_auth() {
 
 start_sshd() {
   sshd
-}
-
-cleanup() {
-  rm -rf "$(get_tmpdir)/TermuxAlpine.sh"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
@@ -192,6 +148,4 @@ then
       show_ansible_version
       ;;
   esac
-
-  cleanup
 fi
