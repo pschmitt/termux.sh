@@ -46,13 +46,11 @@ exec proot \
   --bind="$TMPDIR/dev-shm:/dev/shm" \
   --bind="$TMPDIR/.ansible:/home/.ansible" \
   --bind="$HOME" \
-  --bind="$HOME/.config/gnupg:/home/.config/gnupg" \
-  --bind="$HOME/.ssh/id_ed25519_ansible:/home/.ssh/id_ed25519_ansible" \
   --bind="$HOME/.ssh/known_hosts:/root/.ssh/known_hosts" \
-  --bind="$PWD:/ansible" \
-  --cwd=/ansible \
+  --bind="$PWD:$PWD" \
+  --cwd="$PWD" \
   /usr/bin/env \
-    HOME=/home \
+    HOME="$HOME" \
     PREFIX=/usr \
     SHELL=/bin/sh \
     TERM="$TERM" \
