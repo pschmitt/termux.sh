@@ -36,6 +36,7 @@ fi
 
 exec proot --link2symlink -0 \
   --kill-on-exit \
+  --sysvipc \
   -r "${PREFIX}/var/lib/proot-distro/installed-rootfs/${PROOT_ALIAS}/" \
   -b /dev/ \
   -b /proc/ \
