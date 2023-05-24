@@ -37,18 +37,18 @@ fi
 exec proot --link2symlink -0 \
   --kill-on-exit \
   --sysvipc \
-  -r "${PREFIX}/var/lib/proot-distro/installed-rootfs/${PROOT_ALIAS}/" \
-  -b /dev/ \
-  -b /proc/ \
-  -b /sys/ \
-  -b "$TMPDIR/dev-shm:/dev/shm" \
-  -b "$TMPDIR/.ansible:/home/.ansible" \
-  -b "$HOME" \
-  -b "$HOME/.config/gnupg:/home/.config/gnupg" \
-  -b "$HOME/.ssh/id_ed25519_ansible:/home/.ssh/id_ed25519_ansible" \
-  -b "$HOME/.ssh/known_hosts:/root/.ssh/known_hosts" \
-  -b "$PWD:/ansible" \
-  -w /ansible \
+  --rootfs="${PREFIX}/var/lib/proot-distro/installed-rootfs/${PROOT_ALIAS}" \
+  --bind=/dev \
+  --bind=/proc \
+  --bind=/sys \
+  --bind="$TMPDIR/dev-shm:/dev/shm" \
+  --bind="$TMPDIR/.ansible:/home/.ansible" \
+  --bind="$HOME" \
+  --bind="$HOME/.config/gnupg:/home/.config/gnupg" \
+  --bind="$HOME/.ssh/id_ed25519_ansible:/home/.ssh/id_ed25519_ansible" \
+  --bind="$HOME/.ssh/known_hosts:/root/.ssh/known_hosts" \
+  --bind="$PWD:/ansible" \
+  --cwd=/ansible \
   /usr/bin/env \
     HOME=/home \
     PREFIX=/usr \
