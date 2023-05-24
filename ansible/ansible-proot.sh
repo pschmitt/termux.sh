@@ -34,7 +34,9 @@ then
   CMD=(ash)
 fi
 
-exec proot --link2symlink -0 \
+exec proot \
+  --link2symlink \
+  --root-id \
   --kill-on-exit \
   --sysvipc \
   --rootfs="${PREFIX}/var/lib/proot-distro/installed-rootfs/${PROOT_ALIAS}" \
