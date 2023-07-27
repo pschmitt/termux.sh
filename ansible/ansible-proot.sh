@@ -3,22 +3,6 @@
 # This is loosely based on
 # https://github.com/Hax4us/TermuxAlpine/blob/master/TermuxAlpine.sh#L137-L155
 
-# thnx to @j16180339887 for DNS picker
-addresolvconf () {
-  local android
-  android="$(getprop ro.build.version.release)"
-  if [[ ${android%%.*} -lt 8 ]]
-  then
-    if command -v getprop
-    then
-      getprop | sed -n -e 's/^\[net\.dns.\]: \[\(.*\)\]/\1/p' | \
-        sed '/^\s*$/d' | \
-        sed 's/^/nameserver /' > "${PREFIX}/share/TermuxAlpine/etc/resolv.conf"
-    fi
-  fi
-}
-addresolvconf
-
 # Create temp dirs
 mkdir -p "$TMPDIR/dev-shm" "$TMPDIR/.ansible"
 
