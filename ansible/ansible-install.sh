@@ -50,7 +50,7 @@ install_ansible_pkg() {
   proot::install-pkg ansible bash gnupg py3-setuptools openssh sops
 
   # Install dnspython from pypi rather than the.repo, as of 2023-05-22 the
-  # dig lookup doens't work with the repo version
+  # dig lookup doesn't work with the repo version
   proot::pip-install "dnspython"
 
   # Install extra packages
