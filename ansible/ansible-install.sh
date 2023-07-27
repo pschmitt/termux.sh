@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/data/data/com.termux/files/usr/bin/env bash
 
 usage() {
   echo "Usage: $(basename "$0") [--uninstall|--pip VERSION] [PKGS]"
