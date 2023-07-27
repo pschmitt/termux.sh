@@ -27,11 +27,12 @@ exec proot \
   --bind=/dev \
   --bind=/proc \
   --bind=/sys \
-  --bind="$TMPDIR/dev-shm:/dev/shm" \
-  --bind="$TMPDIR/.ansible:/home/.ansible" \
-  --bind="$HOME" \
-  --bind="$HOME/.ssh/known_hosts:/root/.ssh/known_hosts" \
-  --bind="$PWD:$PWD" \
+  --bind="${TMPDIR}/dev-shm:/dev/shm" \
+  --bind="${TMPDIR}/.ansible:/home/.ansible" \
+  --bind="${HOME}" \
+  --bind="${HOME}:/home" \
+  --bind="${HOME}/.ssh:/root/.ssh" \
+  --bind="${PWD}:${PWD}" \
   --cwd="$PWD" \
   /usr/bin/env \
     HOME="$HOME" \
