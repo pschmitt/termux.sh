@@ -31,7 +31,7 @@ proot::remove-pkg() {
 
 proot::pip-install() {
   proot::install-pkg "py3-pip"
-  proot::exec "pip install -U $*"
+  proot::exec "pip install -U --break-system-packages $*"
 }
 
 install_ansible() {
