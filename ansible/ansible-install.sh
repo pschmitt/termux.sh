@@ -31,6 +31,10 @@ proot::remove-pkg() {
 
 proot::pip-install() {
   proot::install-pkg "py3-pip"
+  # NOTE --break-system-packages is required to install ansible with pip
+  # Otherwise you get an error like:
+  # error: externally-managed-environment
+  # × This environment is externally managed
   proot::exec "pip install -U --break-system-packages $*"
 }
 
