@@ -29,6 +29,7 @@ exec proot \
   --bind=/sys \
   --bind="${TMPDIR}/dev-shm:/dev/shm" \
   --bind="${TMPDIR}/.ansible:/home/.ansible" \
+  --bind="${TMPDIR}/.config/ansible:/home/.config/ansible" \
   --bind="${HOME}" \
   --bind="${HOME}:/home" \
   --bind="${HOME}/.ssh:/root/.ssh" \
