@@ -52,10 +52,8 @@ install_ansible() {
 
 install_ansible_pkg() {
   proot::install-pkg ansible bash gnupg py3-setuptools openssh sops
-
-  # Install dnspython from pypi rather than the.repo, as of 2023-05-22 the
-  # dig lookup doesn't work with the repo version
-  proot::pip-install "dnspython"
+  # nice to haves
+  proot::install-pkg py3-dnspython py3-netaddr sops
 
   # Install extra packages
   if [[ -n "$*" ]]
@@ -80,15 +78,13 @@ install_ansible_pip() {
     py3-setuptools \
     py3-cffi \
     py3-cryptography \
+    py3-dnspython \
+    py3-netaddr \
     py3-markupsafe \
     py3-jinja2 \
     py3-yaml \
     gnupg \
     sops
-
-  proot::install-pkg --virtual build-deps build-base python3-dev
-  proot::pip-install "$ansible_spec" dnspython
-  proot::remove-pkg build-deps
 
   # Install extra packages
   if [[ -n "$*" ]]
