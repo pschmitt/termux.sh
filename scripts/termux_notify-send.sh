@@ -9,11 +9,13 @@ usage() {
   echo -e "  $(basename "$0") [OPTION…] <SUMMARY> [BODY]\n"
   echo "Options:"
   echo "  -a, --app-name          Specifies the app name"
+  echo "  -c, --category TYPE     Specifies the notification category. (NOT IMPLEMENTED)"
+  echo "  -i, --icon=ICON         Specifies an icon filename or stock icon to display."
   echo "  -t, --expire-time TIME  Specifies the timeout in milliseconds at which to expire the notification."
   echo "  -u, --urgency LEVEL     Specifies the urgency level (low, normal, critical)."
 }
 
-ARGS=$(getopt -o a:t:u: -l "app-name:,expire-time:,urgency:" \
+ARGS=$(getopt -o a:c:i:t:u: -l "app-name:,category:,icon:,expire-time:,urgency:" \
               -n "$(basename "$0")" -- "$@")
 
 # FIXME Disable SC2181 since doing "if ! ARGS=.." makes the script unparsable in vim
@@ -30,7 +32,9 @@ fi
 eval set -- "$ARGS";
 
 APP_NAME=termux
+CATEGORY=
 EXPIRE_TIME=
+ICON=
 URGENCY=default # high/low/max/min/default
 VIBRATION_PATTERN=800,500,1000
 EXTRA_ARGS=()
@@ -43,6 +47,22 @@ do
       if [[ -n "$1" ]]
       then
         APP_NAME="$1"
+        shift
+      fi
+      ;;
+    -c|--category)
+      shift
+      if [[ -n "$1" ]]
+      then
+        CATEGORY="$1"
+        shift
+      fi
+      ;;
+    -i|--icon)
+      shift
+      if [[ -n "$1" ]]
+      then
+        ICON="$1"
         shift
       fi
       ;;
@@ -89,6 +109,14 @@ done
 
 TITLE="$1"
 CONTENT="$2"
+
+if [[ -n $ICON ]]
+then
+  # NOTE While --icon seems to be what we want, given it's the same name, but
+  # this flag is merely to set the material design notification icon:
+  # https://fonts.google.com/icons?selected=Material+Icons:account_circle:&icon.size=24&icon.color=%23e3e3e3)
+  EXTRA_ARGS+=(--image-path "$ICON")
+fi
 
 termux-notification \
   "${EXTRA_ARGS[@]}" \
